@@ -162,8 +162,9 @@ a:hover {
 }
 
 .lead {
-  font-size: 1.5rem;
-  font-weight: var(--font-weight-thin);
+  font-size: 1.25rem;
+
+  font-weight: 500;
 }
 
 b,

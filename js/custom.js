@@ -1,20 +1,50 @@
-
-  (function ($) {
-  
+(function ($) {
   "use strict";
 
-    // PRE LOADER
-    $(window).load(function(){
-      $('.preloader').delay(500).slideUp('slow'); // set duration in brackets    
+  // PRELOADER
+  $(window).on('load', function() {
+    $('.preloader').delay(500).slideUp('slow');
+  });
+
+  // NAVBAR
+  $(".navbar").headroom();
+
+  $('.navbar-collapse a').click(function() {
+    $(".navbar-collapse").collapse('hide');
+  });
+
+  // Image loading logic
+  $(window).on('load', function() {
+    const images = document.querySelectorAll('.slick-custom img');
+    let loadedCount = 0;
+
+    images.forEach((img) => {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        img.addEventListener('load', function() {
+          loadedCount++;
+          checkIfAllImagesLoaded();
+        });
+
+        img.addEventListener('error', function() {
+          console.error(`Failed to load image: ${img.src}`);
+        });
+      }
     });
 
-    // NAVBAR
-    $(".navbar").headroom();
+    checkIfAllImagesLoaded();
 
-    $('.navbar-collapse a').click(function(){
-        $(".navbar-collapse").collapse('hide');
-    });
+    function checkIfAllImagesLoaded() {
+      if (loadedCount === images.length) {
+        console.log("All images loaded, starting slideshow...");
+        startSlideshow();
+      }
+    }
+  });
 
+  // Slideshow initialization
+  function startSlideshow() {
     $('.slick-slideshow').slick({
       autoplay: true,
       infinite: true,
@@ -23,51 +53,10 @@
       dots: true,
     });
 
+    // Optional: If you have testimonial slideshows
     $('.slick-testimonial').slick({
       arrows: false,
       dots: true,
     });
-    
-  })(window.jQuery);
-
-  window.onload = function() {
-    const images = document.querySelectorAll('.slick-custom img');
-    let loadedCount = 0;
-
-    images.forEach((img) => {
-        if (img.complete) {
-            // Image is already loaded
-            loadedCount++;
-        } else {
-            img.addEventListener('load', () => {
-                loadedCount++;
-                checkIfAllImagesLoaded();
-            });
-
-            img.addEventListener('error', () => {
-                console.error(`Failed to load image: ${img.src}`);
-            });
-        }
-    });
-
-    checkIfAllImagesLoaded();
-
-    function checkIfAllImagesLoaded() {
-        if (loadedCount === images.length) {
-            console.log("All images loaded, starting slideshow...");
-            startSlideshow(); // Call your slideshow initialization function here
-        }
-    }
-};
-
-function startSlideshow() {
-    // Your slideshow initialization code here
-}
-
-console.log(`Loading image: ${img.src}`);
-
-setTimeout(() => {
-  startSlideshow();
-}, 500); // Adjust the time as needed
-
-console.log(`Image dimensions: ${img.width}x${img.height}`);
+  }
+})(window.jQuery);
